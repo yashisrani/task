@@ -24,6 +24,34 @@ app.post('/additem', (req,res)=>{
     })
 })
 
+// Search and filter items by name
+app.get('/items/search', (req, res) => {
+    const name = req.query.name?.toLowerCase();
+    if (!name) return res.status(400).send('Query parameter "name" is required');
+
+    const filteredItems = items.filter(item => item.name.toLowerCase().includes(name));
+    res.send(filteredItems);
+});
+
+app.get('/items', (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const startIndex = (page - 1) * limit;
+    const paginatedItems = items.slice(startIndex, startIndex + limit);
+
+    res.send({
+        success: true,
+        message: "Items retrieved successfully",
+        data: paginatedItems,
+        page,
+        limit,
+        totalItems: items.length,
+        totalPages: Math.ceil(items.length / limit)
+    });
+});
+
+
 // get all items
 app.get('/getallitems',(req,res)=>{
     res.send(items)
