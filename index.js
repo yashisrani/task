@@ -15,9 +15,9 @@ let counter = 4
 // POST request (adding new item)
 app.post('/additem', (req,res)=>{
     const name = req.body;
-    const response = {id: counter++, name: name}
-    items.push(response)
-    res.send(response);
+    const addedItems = name.map(item => ({ id: idCounter++, name: item.name }));
+    items.push(...addedItems)
+    res.send(addedItems);
     res.status(200).json({
         success:true,
         message:"item is created"
